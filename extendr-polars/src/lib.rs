@@ -91,9 +91,9 @@ impl WrapDataFrame {
         let y = x as usize;
         dbg!(y);
         let s_ptr = format!("{:x}", y);
-
-        let res_robj = R!("browser();x = {{s_ptr}} ; polars:::import_arrow_array_stream(x)");
         dbg!(&s_ptr);
+        let res_robj = R!("browser();x = {{s_ptr}} ; polars:::import_arrow_array_stream(x)");
+
         if res_robj.is_err() {
             // TODO some clean up, release ownership of ArrowArrayStream some how. //
             rprintln!("extendr_polars failed to export");
