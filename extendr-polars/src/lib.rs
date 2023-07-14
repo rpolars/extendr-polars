@@ -92,6 +92,7 @@ impl WrapDataFrame {
         dbg!(y);
         let s_ptr = format!("{}", y);
         dbg!(&s_ptr);
+        rprintln!("in hex it is: {:x}", y);
         let rx = s_ptr.into_robj();
         let res_robj = R!("x = {{rx}};print(x);browser();polars:::import_arrow_array_stream(x)");
 
