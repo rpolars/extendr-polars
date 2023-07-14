@@ -80,11 +80,13 @@ impl Iterator for OwnedDataFrameIterator {
 #[extendr]
 impl WrapDataFrame {
     pub fn export_stream(&self) -> Result<Robj> {
-        let schema = self.0.schema().to_arrow();
+        let df_clone = self.0.clone();
+
+        let schema = df_clone.schema().to_arrow();
         let data_type = pl::ArrowDataType::Struct(schema.fields);
         let field = pl::ArrowField::new("", data_type, false);
 
-        let iter_boxed = Box::new(OwnedDataFrameIterator::new(self.0.clone()));
+        let iter_boxed = Box::new(OwnedDataFrameIterator::new(df_clone));
         let mut stream = ffi::export_iterator(iter_boxed, field);
         //let stream_out_ptr_addr: usize = stream_ptr.parse().unwrap();
         let x = &mut stream as *mut ffi::ArrowArrayStream;
