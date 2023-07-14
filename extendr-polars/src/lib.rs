@@ -90,7 +90,7 @@ impl WrapDataFrame {
         let x = &mut stream as *mut ffi::ArrowArrayStream;
         let y = x as usize;
         dbg!(y);
-        let s_ptr = format!("{:x}", y);
+        let s_ptr = format!("{}", y);
         dbg!(&s_ptr);
         let rx = s_ptr.into_robj();
         let res_robj = R!("x = {{rx}};print(x);browser();polars:::import_arrow_array_stream(x)");
