@@ -92,7 +92,7 @@ impl WrapDataFrame {
         dbg!(y);
         let s_ptr = format!("{:x}", y);
         dbg!(&s_ptr);
-        let res_robj = R!("polars:::import_arrow_array_stream({s_ptr})");
+        let res_robj = R!("browser();library(polars);polars:::import_arrow_array_stream({s_ptr})");
 
         if res_robj.is_err() {
             // TODO some clean up, release ownership of ArrowArrayStream some how.
