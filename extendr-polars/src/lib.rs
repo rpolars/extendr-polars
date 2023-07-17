@@ -115,6 +115,7 @@ impl WrapDataFrame {
         //let boxed_stream = Box::new(unsafe { *stream });
         let x = x as *mut ffi::ArrowArrayStreamReader;
         let x = unsafe { Box::from_raw(x) };
+        drop(x);
 
         Ok(e1)
     }
