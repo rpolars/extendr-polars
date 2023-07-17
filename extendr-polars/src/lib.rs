@@ -92,7 +92,7 @@ impl WrapDataFrame {
 
         //let stream_out_ptr_addr: usize = stream_ptr.parse().unwrap();
         let x = &mut *stream as *mut ffi::ArrowArrayStream;
-        //std::mem::forget(stream); // release ownship as it is transferred to polars::: below
+        std::mem::forget(stream); // release ownship as it is transferred to polars::: below
 
         let y = x as usize;
         dbg!(y);
@@ -102,6 +102,7 @@ impl WrapDataFrame {
         let rx = s_ptr.into_robj();
 
         let res_robj = R!("polars:::import_arrow_array_stream({{rx}})");
+        dbg!("got to here");
         //let res_robj = R!("x = {{rx}};print(x)");
         if res_robj.is_err() {
             // TODO some clean up, release ownership of ArrowArrayStream some how. //
