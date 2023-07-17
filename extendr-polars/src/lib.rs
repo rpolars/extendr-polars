@@ -101,8 +101,7 @@ impl WrapDataFrame {
         rprintln!("in hex it is: {:x}", y);
         let rx = s_ptr.into_robj();
 
-        let res_robj =
-            R!("x = {{rx}};print(x);browser();polars:::import_arrow_array_stream(x);NULL");
+        let res_robj = R!("polars:::import_arrow_array_stream({{rx}})");
         //let res_robj = R!("x = {{rx}};print(x)");
         if res_robj.is_err() {
             // TODO some clean up, release ownership of ArrowArrayStream some how. //
