@@ -92,7 +92,7 @@ impl WrapDataFrame {
 
         //let stream_out_ptr_addr: usize = stream_ptr.parse().unwrap();
         let x = &mut *stream as *mut ffi::ArrowArrayStream;
-        std::mem::forget(stream); // release ownship as it is transferred to polars::: below
+        // release ownship as it is transferred to polars::: below
 
         let y = x as usize;
         dbg!(y);
