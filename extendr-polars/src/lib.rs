@@ -91,7 +91,8 @@ impl WrapDataFrame {
         *stream = ffi::export_iterator(iter_boxed, field);
 
         //let stream_out_ptr_addr: usize = stream_ptr.parse().unwrap();
-        let x = &mut *stream as *mut ffi::ArrowArrayStream;
+        let x = Box::leak(stream) as *mut ffi::ArrowArrayStream;
+        //let x = &mut *stream as *mut ffi::ArrowArrayStream;
         // release ownship as it is transferred to polars::: below
 
         let y = x as usize;
