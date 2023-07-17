@@ -106,8 +106,8 @@ impl WrapDataFrame {
         dbg!(&robj);
 
         let l = robj.as_list().unwrap();
-        let e1: Robj = l.elt(0)?;
-        let _e2 = l.elt(1)?.as_str().unwrap();
+        let e1: Robj = l.elt(0)?.as_list().unwrap().elt(0)?;
+        //let _e2 = l.elt(1)?.as_str().unwrap();
 
         // let x: usize = e2.parse().expect("input is a pointer value");
 
