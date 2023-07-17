@@ -102,15 +102,21 @@ impl WrapDataFrame {
         rprintln!("in hex it is: {:x}", y);
         let rx = s_ptr.into_robj();
 
-        let res_robj = R!("polars:::import_arrow_array_stream({{rx}})");
-        dbg!("got to here");
-        //let res_robj = R!("x = {{rx}};print(x)");
-        if res_robj.is_err() {
-            // TODO some clean up, release ownership of ArrowArrayStream some how. //
-            rprintln!("extendr_polars failed to export");
-        }
+        let robj: Robj = R!("polars:::import_arrow_array_stream({{rx}})")?;
+        dbg!(&robj);
 
-        res_robj
+        let l = robj.as_list().unwrap();
+        let e1: Robj = l.elt(0)?;
+        let e2 = l.elt(1)?.as_str().unwrap();
+
+        let x: usize = e2.parse().expect("input is a pointer value");
+
+        //let stream = x as *mut ffi::ArrowArrayStream;
+        //let boxed_stream = Box::new(unsafe { *stream });
+        let x = x as *mut ffi::ArrowArrayStreamReader;
+        let x = unsafe { Box::from_raw(x) };
+
+        Ok(e1)
     }
 }
 
