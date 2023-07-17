@@ -1,8 +1,8 @@
-use arrow::datatypes::DataType as ADataType;
-use arrow2::ffi;
 use extendr_api::prelude::*;
 use polars::prelude as pl;
 use polars_core::utils::arrow;
+use polars_core::utils::arrow::datatypes::DataType as ADataType;
+use polars_core::utils::arrow::ffi;
 //#[cfg(feature = "lazy")]
 //use {polars_lazy::frame::LazyFrame, polars_plan::logical_plan::LogicalPlan};
 
@@ -36,7 +36,7 @@ impl From<WrapDataFrame> for pl::DataFrame {
 
 pub struct OwnedDataFrameIterator {
     columns: Vec<polars::series::Series>,
-    data_type: arrow::datatypes::DataType,
+    data_type: ADataType,
     idx: usize,
     n_chunks: usize,
 }
