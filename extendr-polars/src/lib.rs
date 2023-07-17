@@ -87,11 +87,13 @@ impl WrapDataFrame {
         let field = pl::ArrowField::new("", data_type, false);
 
         let iter_boxed = Box::new(OwnedDataFrameIterator::new(df_clone));
-        let mut stream = ffi::export_iterator(iter_boxed, field);
+        let mut stream = Box::new(ffi::ArrowArrayStream::empty());
+        *stream = ffi::export_iterator(iter_boxed, field);
 
         //let stream_out_ptr_addr: usize = stream_ptr.parse().unwrap();
-        let x = &mut stream as *mut ffi::ArrowArrayStream;
-        std::mem::forget(stream); // release ownship as it is transferred to polars::: below
+        let x = &mut *stream as *mut ffi::ArrowArrayStream;
+        //std::mem::forget(stream); // release ownship as it is transferred to polars::: below
+
         let y = x as usize;
         dbg!(y);
         let s_ptr = format!("{}", y);
@@ -99,7 +101,8 @@ impl WrapDataFrame {
         rprintln!("in hex it is: {:x}", y);
         let rx = s_ptr.into_robj();
 
-        let res_robj = R!("x = {{rx}};print(x);browser();polars:::import_arrow_array_stream(x)");
+        let res_robj =
+            R!("x = {{rx}};print(x);browser();polars:::import_arrow_array_stream(x);NULL");
         //let res_robj = R!("x = {{rx}};print(x)");
         if res_robj.is_err() {
             // TODO some clean up, release ownership of ArrowArrayStream some how. //
