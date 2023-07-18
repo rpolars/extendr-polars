@@ -10,6 +10,16 @@ use polars_core::utils::arrow::ffi;
 // #[derive(Debug, Clone)]
 // /// A wrapper around a [`Series`] that can be converted to and from python with `pyo3`.
 // pub struct RSeries(pub pl::Series);
+//keep error simple to interface with other libs
+pub fn robj_str_ptr_to_usize(robj: &Robj) -> std::result::Result<usize, String> {
+    let str: &str = robj.as_str().ok_or("robj str ptr not a str".to_string())?;
+    let us: usize = str.parse().map_err(|err| format!("parse error : {err}"))?;
+    Ok(us)
+}
+
+pub fn usize_to_robj_str(us: usize) -> Robj {
+    format!("{us}").into()
+}
 
 #[repr(transparent)]
 #[derive(Debug, Clone)]
@@ -105,6 +115,27 @@ impl WrapDataFrame {
         let robj = R!("polars:::import_arrow_array_stream({{rx}}) |> (\\(x) if(is.null(x$err)) x$ok else stop(x$err))()");
 
         robj
+    }
+
+    pub fn make_dataframe(&self) -> Result<Robj> {
+        // get stream + stream ptr from r-polars
+        let robj_str = R!("polars:::new_arrow_stream()")?;
+        let stream_ptr = robj_str_ptr_to_usize(&robj_str)? as *mut ffi::ArrowArrayStream;
+
+        // export to stream
+        let df_clone = self.0.clone();
+        let schema = df_clone.schema().to_arrow();
+        let data_type = pl::ArrowDataType::Struct(schema.fields);
+        let field = pl::ArrowField::new("", data_type, false);
+        let iter_boxed = Box::new(OwnedDataFrameIterator::new(df_clone));
+        unsafe { *stream_ptr = ffi::export_iterator(iter_boxed, field) };
+
+        // request r-polars to consume stream and produce an Robj of an r-polars DataFrame.
+        // Only interact with this DataFrame via r-polars. Transmuting naively to rust-polars DataFrame is Undefined Behavior.
+        // Use dedicated method to convert back.
+        let robj_df: Robj = R!("polars:::arrow_stream_to_df({{robj_str}})")?;
+
+        Ok(robj_df)
     }
 }
 
