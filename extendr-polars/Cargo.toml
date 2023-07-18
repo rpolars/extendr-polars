@@ -10,9 +10,9 @@ description = "extendr bindings to polars"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-polars-core = { version = "0.31.1", default_features = false }
-polars-plan = { version = "0.31.1", default_features = false, optional = true }
-polars-lazy = { version = "0.31.1", default_features = false, optional = true }
+polars-core = { version = "0.30", default_features = false }
+polars-plan = { version = "0.30", default_features = false, optional = true }
+polars-lazy = { version = "0.30", default_features = false, optional = true }
 
 thiserror = "1"
 ciborium = { version = "0.2.0", optional = true }
