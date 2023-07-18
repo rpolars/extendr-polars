@@ -133,7 +133,7 @@ impl WrapDataFrame {
         // request r-polars to consume stream and produce an Robj of an r-polars DataFrame.
         // Only interact with this DataFrame via r-polars. Transmuting naively to rust-polars DataFrame is Undefined Behavior.
         // Use dedicated method to convert back.
-        let robj_df: Robj = R!("polars:::arrow_stream_to_df({{robj_str}})")?;
+        let robj_df: Robj = R!("polars:::arrow_stream_to_df({{robj_str}}) |> polars:::unwrap('exporting DataFrame to r-polars')")?;
 
         Ok(robj_df)
     }
