@@ -1,4 +1,4 @@
-// OwnedDataFrameIterator written by @paleolimbot / nanoarrow in PR for r-polars
+// OwnedDataFrameIterator written by @paleolimbot / nanoarrow in PR for pola-rs/r-polars
 
 use polars_core::utils::arrow;
 use polars_core::utils::arrow::datatypes::DataType as ADataType;
