@@ -25,7 +25,7 @@ pub fn to_rpolars_dataframe(df: pl::DataFrame) -> EResult<Robj> {
 // safety: requires a valid array stream pointer, robj_str_ref
 unsafe fn export_df_as_stream(df: pl::DataFrame, robj_str_ref: &Robj) -> EResult<()> {
     let stream_ptr = rptr::robj_str_ptr_to_usize(robj_str_ref)? as *mut ffi::ArrowArrayStream;
-    let schema = df.schema().to_arrow();
+    let schema = df.schema().to_arrow(true);
     let data_type = pl::ArrowDataType::Struct(schema.fields);
     let field = pl::ArrowField::new("", data_type, false);
     let iter_boxed = Box::new(odi::OwnedDataFrameIterator::new(df));

@@ -10,8 +10,8 @@ description = "extendr bindings to polars"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-polars = { version = "*", default_features = false, features = ["dtype-struct"]}
-polars-core = { version = "*", default_features = false }
+polars = { version = "*", features = ["dtype-struct"]}
+polars-core = { version = "*" }
 polars-plan = { version = "*", default_features = false, optional = true }
 polars-lazy = { version = "*", default_features = false, optional = true }
 thiserror = "1"
